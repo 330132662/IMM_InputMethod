@@ -2,6 +2,7 @@ package com.example.administrator.imm;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 /**
  * Created by yang.jianan on 2017/04/19 14:37.
@@ -13,5 +14,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toast("已更新");
+        finish();
+    }
+
+    private void toast(String s) {
+        Toast.makeText(this, "toast", Toast.LENGTH_SHORT).show();
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodSubtype;
+import android.widget.Toast;
 
 /**
  * Created by yang.jianan on 2017/04/19 14:37.
@@ -31,6 +32,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     /**
      * 键盘 第一次现实的时候调用
+     *
      * @return
      */
     @Override
@@ -69,6 +71,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     /**
      * 联想词条 第一次被现实的时候调用
      * 在要显示侯选词汇的视图时，由框架调用，和onCreateInputView类似，在这个方法中，对candidateview进行初始化
+     *
      * @return
      */
     @Override
@@ -125,9 +128,14 @@ public class AndroidInputMethodService extends InputMethodService implements Key
                 inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
                 //hideWindow(); //隐藏键盘
                 break;
+            case -6:
+                toast("1123");
+                Keyboard keyboardE = new Keyboard(this, R.xml.emoji); // 此处使用了qwerty.xml
+                keyboardView.setKeyboard(keyboardE);
+                break;
             default: //普通输入
                 char code = (char) primaryCode;
-                inputConnection.commitText(String.valueOf(code) + "嘿", 1); //可以对输入的字符串做 加密等等处理
+                inputConnection.commitText(String.valueOf(code), 1); //可以对输入的字符串做 加密等等处理
         }
     }
 
@@ -154,5 +162,9 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     @Override
     public void swipeUp() {
 
+    }
+
+    private void toast(String s) {
+        Toast.makeText(this, "toast", Toast.LENGTH_SHORT).show();
     }
 }

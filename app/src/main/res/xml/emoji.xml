@@ -1,0 +1,32 @@
+<!-- 参考http://www.cnblogs.com/palance/p/5120048.html -->
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="0px"
+    android:keyWidth="10%p"
+    android:keyHeight="60dp"
+    android:verticalGap="0px">
+
+    <Row>
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="e" />
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="m" />
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="o" />
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="j" />
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="i" />
+
+    </Row>
+
+</Keyboard>
