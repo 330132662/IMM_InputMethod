@@ -1,5 +1,6 @@
 package com.example.administrator.imm;
 
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -11,6 +12,14 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.administrator.imm.adapter.GridAdapter;
+import com.example.administrator.imm.adapter.GridSpaceDecoration1;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yang.jianan on 2017/04/19 14:37.
  * 开发参考：http://blog.csdn.net/le_go/article/details/9264831
@@ -20,7 +29,7 @@ import android.widget.Toast;
 public class AndroidInputMethodService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     private String TAG = AndroidInputMethodService.class.getName();
 
-    private KeyboardView keyboardView; // 对应keyboard.xml中定义的KeyboardView
+    //    private KeyboardView keyboardView; // 对应keyboard.xml中定义的KeyboardView
     private Keyboard keyboard; // 对应qwerty.xml中定义的Keyboard
 
     // 做了一些非UI方面的初始化，即字符串变量词汇分隔符的初始化
@@ -30,6 +39,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         Log.d(TAG, "onCreate()");
     }
 
+    private com.example.administrator.imm.adapter.GridAdapter gridAdapter;
+
     /**
      * 键盘 第一次现实的时候调用
      *
@@ -38,13 +49,22 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     @Override
     public View onCreateInputView() {
         // keyboard被创建后，将调用onCreateInputView函数
-        keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);  // 此处使用了keyboard.xml
+        /*keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);  // 此处使用了keyboard.xml
         keyboard = new Keyboard(this, R.xml.qwerty); // 此处使用了qwerty.xml
         keyboardView.setKeyboard(keyboard);
-        keyboardView.setOnKeyboardActionListener(this); //注册键盘事件监听
-
+        keyboardView.setOnKeyboardActionListener(this); *///注册键盘事件监听
+        View recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
+        RecyclerView recyclerView = recyRoot.findViewById(R.id.list);
+        recyclerView.addItemDecoration(new GridSpaceDecoration1());
+        gridAdapter = new GridAdapter();
+        List<Drawable> biaoqing = new ArrayList<>();
+        for (int i = 0; i < 60; i++) {
+            biaoqing.add(getResources().getDrawable(R.mipmap.ic_launcher));
+        }
+        gridAdapter.setDataList(biaoqing);
+        recyclerView.setAdapter(gridAdapter);
         Log.d(TAG, "onCreateInputView()");
-        return keyboardView;
+        return recyRoot;
     }
 
     /*    @Override
@@ -130,8 +150,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
                 break;
             case -6:
                 toast("1123");
-                Keyboard keyboardE = new Keyboard(this, R.xml.emoji); // 此处使用了qwerty.xml
-                keyboardView.setKeyboard(keyboardE);
+                /*Keyboard keyboardE = new Keyboard(this, R.xml.emoji); // 此处使用了qwerty.xml
+                keyboardView.setKeyboard(keyboardE);*/
                 break;
             default: //普通输入
                 char code = (char) primaryCode;
