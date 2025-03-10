@@ -31,6 +31,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ImageView iv = holder.itemView.findViewById(R.id.iv);
         iv.setImageDrawable(dataList.get(position));
+
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override

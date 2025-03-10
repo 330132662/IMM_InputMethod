@@ -1,10 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    apply from : 'maven.gradle'
     ext {
         kotlin_version = "1.6.21"
     }
     repositories {
+        addCommonMaven(repositories)
         jcenter()
         google()
     }
@@ -18,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        addCommonMaven(repositories)
         jcenter()
         google()
     }

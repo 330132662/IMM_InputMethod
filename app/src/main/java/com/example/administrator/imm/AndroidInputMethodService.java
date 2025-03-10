@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.administrator.imm.adapter.GridAdapter;
-import com.example.administrator.imm.adapter.GridSpaceDecoration1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,11 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate()");
+
     }
 
     private com.example.administrator.imm.adapter.GridAdapter gridAdapter;
+    private List<String> tabList = new ArrayList<>();
 
     /**
      * 键盘 第一次现实的时候调用
@@ -48,6 +49,10 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      */
     @Override
     public View onCreateInputView() {
+        tabList.add("Emoji");
+        tabList.add("Cute Pet");
+        tabList.add("Baoman Man");
+        tabList.add("Heat Map");
         // keyboard被创建后，将调用onCreateInputView函数
         /*keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);  // 此处使用了keyboard.xml
         keyboard = new Keyboard(this, R.xml.qwerty); // 此处使用了qwerty.xml

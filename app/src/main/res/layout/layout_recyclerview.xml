@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:background="#FFEB3B"
         android:minHeight="40dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3" />
