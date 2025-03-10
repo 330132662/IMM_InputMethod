@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.administrator.imm.R;
+import com.example.administrator.imm.http.EventClick;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -29,15 +32,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        int p = position;
         ImageView iv = holder.itemView.findViewById(R.id.iv);
         iv.setImageDrawable(dataList.get(position));
 
-        iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(p)));
     }
 
     @Override
