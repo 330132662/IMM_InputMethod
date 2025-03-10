@@ -55,7 +55,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         keyboardView.setOnKeyboardActionListener(this); *///注册键盘事件监听
         View recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
         RecyclerView recyclerView = recyRoot.findViewById(R.id.list);
-        recyclerView.addItemDecoration(new GridSpaceDecoration1());
+//        recyclerView.addItemDecoration(new GridSpaceDecoration1());
         gridAdapter = new GridAdapter();
         List<Drawable> biaoqing = new ArrayList<>();
         for (int i = 0; i < 60; i++) {
