@@ -264,6 +264,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     }
 
     private void toast(String s) {
-        Toast.makeText(this, "toast", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

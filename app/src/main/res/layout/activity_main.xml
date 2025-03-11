@@ -1,19 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_common"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context="com.example.administrator.imm.MainActivity">
 
-    <TextView
+    <com.hjq.bar.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:leftIconHeight="0dp"
+        app:leftIconWidth="0dp"
+        app:lineVisible="false"
+        app:title="@string/app_name"
+        app:titleColor="@color/white" />
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="This is 输入法窗口,其实可以作为一个设置页，皮肤，账号同步，表情包等等。。。"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/p1" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Emotionale Tastatur, Chat mehr aufgeregt"
+        android:textColor="@color/white" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/enter"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:paddingLeft="20dp"
+        android:src="@mipmap/enter"
+        android:text="ENTER"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/p2" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
