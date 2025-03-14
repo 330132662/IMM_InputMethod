@@ -2,8 +2,9 @@ package com.example.administrator.imm.http
 
 import com.hjq.http.config.IRequestApi
 
-class TypeApi : BaseApi() {
+open class BaseApi : IRequestApi {
+    val type = "android"
     override fun getApi(): String {
-        return "/api/Icon/typelist";
+        return "/";
     }
 }

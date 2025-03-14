@@ -1,10 +1,9 @@
 package com.example.administrator.imm.http
 
-import com.hjq.http.config.IRequestApi
 import com.hjq.http.config.IRequestCache
 import com.hjq.http.model.CacheMode
 
-class ListApi : IRequestApi, IRequestCache {
+class ListApi : BaseApi(), IRequestCache {
     override fun getApi(): String {
         return "/api/Icon/list";
     }

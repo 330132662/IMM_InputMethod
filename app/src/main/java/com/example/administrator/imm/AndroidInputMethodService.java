@@ -12,13 +12,19 @@ import android.inputmethodservice.KeyboardView;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputContentInfo;
 import android.view.inputmethod.InputMethodSubtype;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -27,7 +33,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.angcyo.tablayout.DslTabLayout;
 import com.example.administrator.imm.adapter.GridAdapter;
+import com.example.administrator.imm.adapter.RecyTabAdapter;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
 import com.example.administrator.imm.http.ListApi;
@@ -83,7 +91,10 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private List<String> tabList = new ArrayList<>();
 
     private View recyRoot;
+    private RecyclerView recy_tab;
     private int typeIdChoosed = -1;
+    private int fixedHeight = 240;// dp值
+    RecyTabAdapter adapter;
 
     /**
      * 键盘 第一次现实的时候调用
@@ -92,6 +103,23 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      */
     @Override
     public View onCreateInputView() {
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float heightF = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, fixedHeight, metrics);
+//        int heightPx = Integer.parseInt(heightF + "");
+        int heightPx = (int) heightF;
+        // 设置窗口参数
+        Window window = getWindow().getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.height = heightPx;
+            params.verticalMargin = 0f;
+            params.gravity = Gravity.BOTTOM;
+            window.setAttributes(params);
+        }
+
+
         // keyboard被创建后，将调用onCreateInputView函数
         /*keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);  // 此处使用了keyboard.xml
         keyboard = new Keyboard(this, R.xml.qwerty); // 此处使用了qwerty.xml
@@ -99,7 +127,11 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         keyboardView.setOnKeyboardActionListener(this); *///注册键盘事件监听
         recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
         tab_layout = recyRoot.findViewById(R.id.tab_layout);
-        vp2 = recyRoot.findViewById(R.id.vp2);
+        recy_tab = recyRoot.findViewById(R.id.recy_tab);
+        adapter = new RecyTabAdapter(this);
+        recy_tab.setAdapter(adapter);
+//        dsl_layout = recyRoot.findViewById(R.id.dsl_layout);
+//        vp2 = recyRoot.findViewById(R.id.vp2);
         initView();
         initView1();
 
@@ -215,8 +247,23 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         super.onStartInputView(info, restarting);
         currentUsingPkg = info.packageName;
         Log.d(TAG, "onStartInputView 应用名称");
+        updateInputViewHeight();
     }
 
+    private void updateInputViewHeight() {
+        Window window = getWindow().getWindow();
+        if (window == null) return;
+
+//        View rootView = window.getDecorView().findViewById(R.id.root_view);
+        if (recyRoot == null) return;
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, fixedHeight, metrics);
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) recyRoot.getLayoutParams();
+        params.height = heightPx;
+        recyRoot.setLayoutParams(params);
+    }
 
     @Override
     protected void onCurrentInputMethodSubtypeChanged(InputMethodSubtype newSubtype) {
@@ -357,10 +404,13 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private void refreshExpList() {
         gridAdapter.setDataList(expList);
         recyclerView.setAdapter(gridAdapter);
+        adapter.setDataList(tabData);
+        recy_tab.setAdapter(adapter);
 
     }
 
     private TabLayout tab_layout;
+    private DslTabLayout dsl_layout;
     private ViewPager2 vp2;
     private List<Fragment> fragments;
 
@@ -371,9 +421,11 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         fragments = new ArrayList<>();
         for (TypeResp.DataDTO dataDTO : tabData) {
             String name = dataDTO.getName();
-            TabLayout.Tab t = tab_layout.newTab().setText(name);
-            tab_layout.addTab(t);
+            /*TabLayout.Tab t = tab_layout.newTab().setText(name);
+            tab_layout.addTab(t);*/
 //            fragments.add(new ExpFrag(dataDTO.getId()));
+
+
         }
 
 //        vp2.setAdapter(new MyFragmentAdapter( this, fragments));
