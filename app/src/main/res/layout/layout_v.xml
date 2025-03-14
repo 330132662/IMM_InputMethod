@@ -22,11 +22,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:src="@mipmap/p1" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_inputmng"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -38,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Emotionale Tastatur, Chat mehr aufgeregt"
+        android:text="Version 0.1.0"
         android:textColor="@color/white" />
 
 
@@ -47,12 +46,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@mipmap/enter"
+        android:background="@mipmap/ic_update"
         android:gravity="center"
         android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:src="@mipmap/enter"
-        android:text="ENTER"
         android:textSize="20sp" />
 
     <androidx.appcompat.widget.AppCompatImageView

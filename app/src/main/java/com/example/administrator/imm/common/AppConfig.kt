@@ -4,10 +4,14 @@ import com.example.administrator.imm.BuildConfig
 
 class AppConfig {
     companion object {
+        fun getHostUrl(): String {
+            return "";
+        }
 
         fun isDebug(): Boolean {
             return BuildConfig.DEBUG;
         }
+
         fun getPackageName(): String {
             return BuildConfig.APPLICATION_ID
         }

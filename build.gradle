@@ -3,7 +3,8 @@
 buildscript {
     apply from : 'maven.gradle'
     ext {
-        kotlin_version = "1.6.21"
+//        kotlin_version = "1.6.21"
+        kotlin_version = "1.8.0"
     }
     repositories {
         addCommonMaven(repositories)

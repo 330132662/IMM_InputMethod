@@ -5,6 +5,7 @@ import android.os.Build
 import com.example.administrator.imm.http.RequestHandler
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonToken
+import com.hjq.demo.http.glide.GlideApp
 import com.hjq.gson.factory.GsonFactory
 import com.hjq.http.EasyConfig
 import com.hjq.http.config.RequestServer
@@ -85,4 +86,16 @@ class AppApplication : Application() {
         }
 
     }
+    override fun onLowMemory() {
+        super.onLowMemory()
+        // 清理所有图片内存缓存
+         GlideApp.get(this).onLowMemory()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        // 根据手机内存剩余情况清理图片内存缓存
+        GlideApp.get(this).onTrimMemory(level)
+    }
+
 }

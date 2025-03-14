@@ -21,13 +21,20 @@ import android.view.inputmethod.InputContentInfo;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.administrator.imm.adapter.GridAdapter;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
+import com.example.administrator.imm.http.TypeApi;
+import com.example.administrator.imm.model.TypeResp;
+import com.hjq.http.EasyHttp;
+import com.hjq.http.listener.OnHttpListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +63,18 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         super.onCreate();
         EventBus.getDefault().register(this);
         Log.d(TAG, "onCreate()");
+        initView();
+    }
 
+    private void initView() {
+        lifecycleOwner = new LifecycleOwner() {
+            @NonNull
+            @Override
+            public Lifecycle getLifecycle() {
+                return null;
+            }
+        };
+        reqType();
     }
 
 
@@ -265,5 +283,36 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     private void toast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private LifecycleOwner lifecycleOwner;
+
+    /**
+     * 获取 表情包的 组
+     */
+    private void reqType() {
+        EasyHttp.get(lifecycleOwner).api(new TypeApi()).request(new OnHttpListener<TypeResp>() {
+            @Override
+            public void onSucceed(TypeResp result, boolean cache) {
+                OnHttpListener.super.onSucceed(result, cache);
+            }
+
+            @Override
+            public void onSucceed(TypeResp typeResp) {
+
+            }
+
+            @Override
+            public void onFail(Exception e) {
+
+            }
+        });
+    }
+
+    /**
+     * todo 按照类型 数量 加载多个fragment
+     */
+    private void loadFragment() {
+
     }
 }

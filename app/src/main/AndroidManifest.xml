@@ -33,9 +33,12 @@
         <activity android:name=".ui.G2Act" />
         <activity android:name=".ui.G3Act" />
         <activity android:name=".ui.ExpListAct" android:exported="true"/>
+        <activity android:name=".ui.VersionAct" android:exported="true"/>
+        <activity android:name=".ui.ExpDetailAct" android:exported="true"/>
 
         <!--核心 继承自InputMethodService-->
         <service
+            android:exported="true"
             android:name=".AndroidInputMethodService"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
