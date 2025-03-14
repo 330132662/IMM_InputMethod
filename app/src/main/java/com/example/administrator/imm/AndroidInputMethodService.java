@@ -21,19 +21,21 @@ import android.view.inputmethod.InputContentInfo;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.administrator.imm.adapter.GridAdapter;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
+import com.example.administrator.imm.http.ListApi;
 import com.example.administrator.imm.http.TypeApi;
 import com.example.administrator.imm.model.TypeResp;
+import com.google.android.material.tabs.TabLayout;
 import com.hjq.http.EasyHttp;
+import com.hjq.http.lifecycle.ApplicationLifecycle;
 import com.hjq.http.listener.OnHttpListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,6 +46,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by yang.jianan on 2017/04/19 14:37.
@@ -56,6 +60,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     //    private KeyboardView keyboardView; // 对应keyboard.xml中定义的KeyboardView
     private Keyboard keyboard; // 对应qwerty.xml中定义的Keyboard
+    private List<TypeResp.DataDTO> tabData;
+    private GridAdapter gridAdapter;
 
     // 做了一些非UI方面的初始化，即字符串变量词汇分隔符的初始化
     @Override
@@ -63,24 +69,18 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         super.onCreate();
         EventBus.getDefault().register(this);
         Log.d(TAG, "onCreate()");
-        initView();
     }
 
     private void initView() {
-        lifecycleOwner = new LifecycleOwner() {
-            @NonNull
-            @Override
-            public Lifecycle getLifecycle() {
-                return null;
-            }
-        };
+
         reqType();
     }
 
 
-    private com.example.administrator.imm.adapter.GridAdapter gridAdapter;
     private List<String> tabList = new ArrayList<>();
-    private List<Drawable> biaoqing;
+
+    private View recyRoot;
+    private int typeIdChoosed = -1;
 
     /**
      * 键盘 第一次现实的时候调用
@@ -89,25 +89,37 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      */
     @Override
     public View onCreateInputView() {
-        tabList.add("Emoji");
-        tabList.add("Cute Pet");
-        tabList.add("Baoman Man");
-        tabList.add("Heat Map");
         // keyboard被创建后，将调用onCreateInputView函数
         /*keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);  // 此处使用了keyboard.xml
         keyboard = new Keyboard(this, R.xml.qwerty); // 此处使用了qwerty.xml
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(this); *///注册键盘事件监听
-        View recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
-        RecyclerView recyclerView = recyRoot.findViewById(R.id.list);
-//        recyclerView.addItemDecoration(new GridSpaceDecoration1());
-        gridAdapter = new GridAdapter();
-        biaoqing = new ArrayList<>();
-        for (int i = 0; i < 60; i++) {
-            biaoqing.add(getResources().getDrawable(R.mipmap.ic_launcher));
-        }
-        gridAdapter.setDataList(biaoqing);
-        recyclerView.setAdapter(gridAdapter);
+        recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
+        tab_layout = recyRoot.findViewById(R.id.tab_layout);
+        vp2 = recyRoot.findViewById(R.id.vp2);
+        initView();
+        initView1();
+
+
+        tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+//                  方案1  新请求  刷新recyclerview里的数据
+                typeIdChoosed = tabData.get(tab.getPosition()).getId();
+                toast("" + typeIdChoosed);
+                reqList();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         Log.d(TAG, "onCreateInputView()");
         return recyRoot;
     }
@@ -135,8 +147,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     @Subscribe
     public void expressionClick(EventClick click) {
         final int pos = click.getPos();
-        Drawable choosed = biaoqing.get(pos);
-        send(choosed);
+//        Drawable choosed = biaoqing.get(pos);
+//        send(choosed);
     }
 
     private void send(Drawable expPic) {
@@ -285,13 +297,37 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
-    private LifecycleOwner lifecycleOwner;
 
     /**
      * 获取 表情包的 组
      */
     private void reqType() {
-        EasyHttp.get(lifecycleOwner).api(new TypeApi()).request(new OnHttpListener<TypeResp>() {
+        EasyHttp.get(ApplicationLifecycle.getInstance()).api(new TypeApi()).request(new OnHttpListener<TypeResp>() {
+            @Override
+            public void onSucceed(TypeResp result, boolean cache) {
+                OnHttpListener.super.onSucceed(result, cache);
+                Timber.d("onSucceed  cache ");
+            }
+
+            @Override
+            public void onSucceed(TypeResp typeResp) {
+                tabData = typeResp.getData();
+                Timber.d("onSucceed  ");
+                loadFragment();
+            }
+
+            @Override
+            public void onFail(Exception e) {
+
+            }
+        });
+    }
+
+    private void reqList() {
+        ListApi api = new ListApi();
+//        api.setLast_id(0);
+        api.setType_id(typeIdChoosed);
+        EasyHttp.get(ApplicationLifecycle.getInstance()).api(api).request(new OnHttpListener<TypeResp>() {
             @Override
             public void onSucceed(TypeResp result, boolean cache) {
                 OnHttpListener.super.onSucceed(result, cache);
@@ -309,10 +345,46 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         });
     }
 
+    private TabLayout tab_layout;
+    private ViewPager2 vp2;
+    private List<Fragment> fragments;
+
     /**
      * todo 按照类型 数量 加载多个fragment
      */
     private void loadFragment() {
+        fragments = new ArrayList<>();
+        for (TypeResp.DataDTO dataDTO : tabData) {
+            String name = dataDTO.getName();
+            TabLayout.Tab t = tab_layout.newTab().setText(name);
+            tab_layout.addTab(t);
+//            fragments.add(new ExpFrag(dataDTO.getId()));
+        }
+        /*for (int i = 0; i < tabData.size(); i++) {
+            TabLayout.Tab t = tab_layout.getTabAt(i);
+            t.setText(tabData.get(i).getName());
+        }*/
+//        vp2.setAdapter(new MyFragmentAdapter( this, fragments));
+        /*ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter();
+        viewPager2Adapter.setDataList(fragments);
+        vp2.setAdapter(viewPager2Adapter);*/
+
+    }
+
+    private RecyclerView recyclerView;
+
+    private void initView1() {
+        recyclerView = recyRoot.findViewById(R.id.list);
+//        recyclerView.addItemDecoration(new GridSpaceDecoration1());
+        gridAdapter = new GridAdapter();
+//        gridAdapter.setDataList(biaoqing);
+        recyclerView.setAdapter(gridAdapter);
+    }
+
+    /**
+     * plan A: 用tab+ 单个recyclerview的方案
+     */
+    private void resulting1() {
 
     }
 }

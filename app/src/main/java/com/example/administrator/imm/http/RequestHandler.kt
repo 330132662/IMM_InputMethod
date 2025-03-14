@@ -74,7 +74,7 @@ class RequestHandler constructor(private val application: Application) : IReques
         }
 
         // 打印这个 Json 或者文本
-//        EasyLog.printJson(httpRequest, text)
+        EasyLog.printJson(httpRequest, text)
         if ((String::class.java == type)) {
             return text
         }

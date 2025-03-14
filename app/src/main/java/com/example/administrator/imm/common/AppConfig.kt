@@ -5,7 +5,7 @@ import com.example.administrator.imm.BuildConfig
 class AppConfig {
     companion object {
         fun getHostUrl(): String {
-            return "";
+            return "http://dgbqbapp.test.jhwangluo.com";
         }
 
         fun isDebug(): Boolean {

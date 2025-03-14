@@ -63,7 +63,7 @@ class AppApplication : Application() {
             // 是否打印日志
             .setLogEnabled(AppConfig.isDebug())
             // 设置服务器配置
-            .setServer(RequestServer("http://baidu.com"))
+            .setServer(RequestServer(AppConfig.getHostUrl()))
             // 设置请求处理策略
             .setHandler(RequestHandler(this)).addHeader(MmkvUtil.Token, "")
             .addHeader(MmkvUtil.Version, AppConfig.getVersionName())
