@@ -25,7 +25,7 @@ class ExpFrag(typeId: Int) : Fragment(typeId) {
         val recyclerView: RecyclerView = rootView?.findViewById<RecyclerView>(R.id.list)!!
 
         //        recyclerView.addItemDecoration(new GridSpaceDecoration1());
-        gridAdapter = GridAdapter()
+        gridAdapter = GridAdapter(context)
         biaoqing = ArrayList<Drawable>()
         /*for (i in 0..59) {
             biaoqing.add(resources.getDrawable(R.mipmap.ic_launcher))

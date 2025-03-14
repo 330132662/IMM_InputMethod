@@ -32,6 +32,7 @@ import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
 import com.example.administrator.imm.http.ListApi;
 import com.example.administrator.imm.http.TypeApi;
+import com.example.administrator.imm.model.ListResp;
 import com.example.administrator.imm.model.TypeResp;
 import com.google.android.material.tabs.TabLayout;
 import com.hjq.http.EasyHttp;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
 import timber.log.Timber;
 
 /**
@@ -62,6 +64,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private Keyboard keyboard; // 对应qwerty.xml中定义的Keyboard
     private List<TypeResp.DataDTO> tabData;
     private GridAdapter gridAdapter;
+    private List<ListResp.DataDTO> expList;
 
     // 做了一些非UI方面的初始化，即字符串变量词汇分隔符的初始化
     @Override
@@ -106,7 +109,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             public void onTabSelected(TabLayout.Tab tab) {
 //                  方案1  新请求  刷新recyclerview里的数据
                 typeIdChoosed = tabData.get(tab.getPosition()).getId();
-                toast("" + typeIdChoosed);
                 reqList();
             }
 
@@ -327,15 +329,22 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         ListApi api = new ListApi();
 //        api.setLast_id(0);
         api.setType_id(typeIdChoosed);
-        EasyHttp.get(ApplicationLifecycle.getInstance()).api(api).request(new OnHttpListener<TypeResp>() {
+        EasyHttp.get(ApplicationLifecycle.getInstance()).api(api).request(new OnHttpListener<ListResp>() {
             @Override
-            public void onSucceed(TypeResp result, boolean cache) {
+            public void onSucceed(ListResp result, boolean cache) {
                 OnHttpListener.super.onSucceed(result, cache);
+                expList = result.getData();
             }
 
             @Override
-            public void onSucceed(TypeResp typeResp) {
+            public void onSucceed(ListResp typeResp) {
+                expList = typeResp.getData();
+            }
 
+            @Override
+            public void onEnd(Call call) {
+                OnHttpListener.super.onEnd(call);
+                refreshExpList();
             }
 
             @Override
@@ -343,6 +352,12 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
             }
         });
+    }
+
+    private void refreshExpList() {
+        gridAdapter.setDataList(expList);
+        recyclerView.setAdapter(gridAdapter);
+
     }
 
     private TabLayout tab_layout;
@@ -360,10 +375,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             tab_layout.addTab(t);
 //            fragments.add(new ExpFrag(dataDTO.getId()));
         }
-        /*for (int i = 0; i < tabData.size(); i++) {
-            TabLayout.Tab t = tab_layout.getTabAt(i);
-            t.setText(tabData.get(i).getName());
-        }*/
+
 //        vp2.setAdapter(new MyFragmentAdapter( this, fragments));
         /*ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter();
         viewPager2Adapter.setDataList(fragments);
@@ -376,8 +388,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private void initView1() {
         recyclerView = recyRoot.findViewById(R.id.list);
 //        recyclerView.addItemDecoration(new GridSpaceDecoration1());
-        gridAdapter = new GridAdapter();
-//        gridAdapter.setDataList(biaoqing);
+        gridAdapter = new GridAdapter(this);
         recyclerView.setAdapter(gridAdapter);
     }
 

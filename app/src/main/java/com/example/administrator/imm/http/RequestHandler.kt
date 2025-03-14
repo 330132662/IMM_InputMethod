@@ -162,7 +162,7 @@ class RequestHandler constructor(private val application: Application) : IReques
         }/*EasyLog.printLog(httpRequest, "----- readCache cacheKey -----")
         EasyLog.printJson(httpRequest, cacheKey)*/
         EasyLog.printLog(httpRequest, "----- readCache cacheValue -----")
-        EasyLog.printJson(httpRequest, cacheValue)
+        EasyLog.printJson(httpRequest, cacheValue);
 //        return GsonFactory.getSingletonGson().fromJson(cacheValue, attr.type)
         return GsonFactory.getSingletonGson().fromJson(cacheValue, type)
     }

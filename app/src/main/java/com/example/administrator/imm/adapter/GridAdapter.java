@@ -1,5 +1,6 @@
 package com.example.administrator.imm.adapter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.administrator.imm.R;
+import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
+import com.example.administrator.imm.model.ListResp;
+import com.hjq.demo.http.glide.GlideApp;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-    public void setDataList(List<Drawable> dataList) {
-        this.dataList = dataList;
+    public GridAdapter(Context context) {
+        this.context = context;
     }
 
-    private List<Drawable> dataList;
+    private Context context;
+
+    public void setDataList(List<ListResp.DataDTO> dataList) {
+        this.dataList = dataList;
+        notifyDataSetChanged();
+    }
+
+    private List<ListResp.DataDTO> dataList;
 
 
     @NonNull
@@ -34,8 +45,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int p = position;
         ImageView iv = holder.itemView.findViewById(R.id.iv);
-        iv.setImageDrawable(dataList.get(position));
+//        iv.setImageDrawable(dataList.get(position));
 
+        String relPath = dataList.get(position).getIcon();
+        if (!relPath.startsWith("http")) {
+            relPath = AppConfig.Companion.getHostUrl() + relPath;
+        }
+        GlideApp.with(context).load(relPath).into(iv);
         iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(p)));
     }
 
