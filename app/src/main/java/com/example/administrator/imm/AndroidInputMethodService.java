@@ -5,8 +5,6 @@ import android.content.ClipDescription;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -27,13 +25,9 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.angcyo.tablayout.DslTabLayout;
 import com.example.administrator.imm.adapter.GridAdapter;
 import com.example.administrator.imm.adapter.RecyTabAdapter;
 import com.example.administrator.imm.common.AppConfig;
@@ -43,7 +37,6 @@ import com.example.administrator.imm.http.ListApi;
 import com.example.administrator.imm.http.TypeApi;
 import com.example.administrator.imm.model.ListResp;
 import com.example.administrator.imm.model.TypeResp;
-import com.google.android.material.tabs.TabLayout;
 import com.hjq.http.EasyHttp;
 import com.hjq.http.lifecycle.ApplicationLifecycle;
 import com.hjq.http.listener.OnHttpListener;
@@ -130,7 +123,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(this); *///注册键盘事件监听
         recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
-        tab_layout = recyRoot.findViewById(R.id.tab_layout);
+//        tab_layout = recyRoot.findViewById(R.id.tab_layout);
         recy_tab = recyRoot.findViewById(R.id.recy_tab);
         recy_tab.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -208,21 +201,24 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         reqList();
     }
 
+    private Bitmap chooseBitmap = null;
+
     @Subscribe
     public void expressionClick(EventClick click) {
         final int pos = click.getPos();
+        chooseBitmap = click.getImg();
 //        Drawable choosed = biaoqing.get(pos);
-//        send(choosed);
+        send(pos);
     }
 
-    private void send(Drawable expPic) {
+    private void send(int pos) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            Drawable drawable = ContextCompat.getDrawable(this, R.mipmap.ic_launcher);
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            /*Drawable drawable = ContextCompat.getDrawable(this, R.mipmap.ic_launcher);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();*/
             File cacheDir = getCacheDir();
-            File file = new File(cacheDir, "temp_image.png");
+            File file = new File(cacheDir, "temp_image.jpg");
             try (FileOutputStream fos = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                chooseBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -234,6 +230,15 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             ic.commitContent(new InputContentInfo(uri,        // 表情包的 Content URI
                     new ClipDescription(mimeType, new String[]{})            // 可选，用于标识来源
             ), InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION, params);
+          /*  String imageUrl = expList.get(pos).getIcon();
+            if (!imageUrl.startsWith("http")) {
+                imageUrl = AppConfig.Companion.getHostUrl() + imageUrl;
+            }
+            if (ic != null) {
+                // 方式1：发送图片URL（通用方案）
+                ic.commitText(imageUrl, 1);
+            }*/
+
 
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("image/png");  // 根据实际图片类型调整 MIME
@@ -276,7 +281,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     public void onStartInputView(EditorInfo info, boolean restarting) {
         super.onStartInputView(info, restarting);
         currentUsingPkg = info.packageName;
-        Log.d(TAG, "onStartInputView 应用名称");
+        Log.d(TAG, "onStartInputView 应用包名 " + currentUsingPkg);
 //        updateInputViewHeight();
     }
 
@@ -425,10 +430,10 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     }
 
-    private TabLayout tab_layout;
+    /*private TabLayout tab_layout;
     private DslTabLayout dsl_layout;
     private ViewPager2 vp2;
-    private List<Fragment> fragments;
+    private List<Fragment> fragments;*/
 
     /**
      * 按照类型 数量 加载多个fragment

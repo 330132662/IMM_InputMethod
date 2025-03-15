@@ -1,15 +1,24 @@
 package com.example.administrator.imm.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.ResourceCallback;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.administrator.imm.R;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
@@ -49,9 +58,27 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         if (!relPath.startsWith("http")) {
             relPath = AppConfig.Companion.getHostUrl() + relPath;
         }
+        final Bitmap[] tem = {null};
 
-        GlideApp.with(context).load(relPath).apply(new RequestOptions().transform(new RoundedCorners(10))).into(iv);
-        iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position)));
+        GlideApp.with(context).asBitmap().load(relPath).apply(
+                        new RequestOptions().transform(new RoundedCorners(10)))
+                .into(new CustomTarget<Bitmap>() {
+
+                          @Override
+                          public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                              tem[0] = bitmap;
+                              iv.setImageBitmap(bitmap);
+                          }
+
+                          @Override
+                          public void onLoadCleared(@Nullable Drawable drawable) {
+
+                          }
+                      }
+
+
+                );
+        iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position, tem[0])));
     }
 
     @Override
