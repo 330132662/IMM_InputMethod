@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodSubtype;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -84,13 +85,15 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     private void initView() {
         reqType();
-//        chooseImm();
     }
 
 
     private List<String> tabList = new ArrayList<>();
 
     private View recyRoot;
+    /**
+     * 表情名称
+     */
     private RecyclerView recy_tab;
     private int typeIdChoosed = -1;
     private int fixedHeight = 240;// dp值
@@ -148,14 +151,12 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         initView1();
 
 
-
         //            注意  虽然没用到  但是删了之后 其他空间就显示不出来的了！
-        tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        /*tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 //                  方案1  新请求  刷新recyclerview里的数据
-//                typeIdChoosed = tabData.get(tab.getPosition()).getId();
-//                reqList();
+
             }
 
             @Override
@@ -167,7 +168,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
         Log.d(TAG, "onCreateInputView()");
         return recyRoot;
     }
@@ -203,8 +204,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         }
         adapter.setDataList(tabData);
 
-//        typeIdChoosed = tabData.get(choosedIndex).getId();
-//        reqList();
+        typeIdChoosed = tabData.get(choosedIndex).getId();
+        reqList();
     }
 
     @Subscribe
@@ -313,16 +314,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         EventBus.getDefault().unregister(this);
     }
 
-    //↓↓↓↓↓↓↓OnKeyboardActionListener接口对应的方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    @Override
-    public void onPress(int primaryCode) {
-
-    }
-
-    @Override
-    public void onRelease(int primaryCode) {
-
-    }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -347,35 +338,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         }
     }
 
-    @Override
-    public void onText(CharSequence text) {
-
-    }
-
-    @Override
-    public void swipeLeft() {
-
-    }
-
-    @Override
-    public void swipeRight() {
-
-    }
-
-    @Override
-    public void swipeDown() {
-
-    }
-
-    @Override
-    public void swipeUp() {
-
-    }
-
-    private void toast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
 
     /**
      * 获取 表情包的 组
@@ -386,13 +348,22 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             public void onSucceed(TypeResp result, boolean cache) {
                 OnHttpListener.super.onSucceed(result, cache);
                 Timber.d("onSucceed  cache ");
+                tabData = result.getData();
+
             }
 
             @Override
             public void onSucceed(TypeResp typeResp) {
                 tabData = typeResp.getData();
                 Timber.d("onSucceed  ");
-                loadFragment();
+
+            }
+
+            @Override
+            public void onEnd(Call call) {
+                OnHttpListener.super.onEnd(call);
+//                loadFragment();
+                loadTab();
             }
 
             @Override
@@ -402,6 +373,21 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         });
     }
 
+    private void loadTab() {
+        adapter.setDataList(tabData);
+        recy_tab.setAdapter(adapter);
+        if (tabData != null) {
+            typeIdChoosed = tabData.get(0).getId();
+            reqList();
+        } else {
+            toast("No Data");
+        }
+
+    }
+
+    /**
+     * 表情包下的表情列表
+     */
     private void reqList() {
         ListApi api = new ListApi();
 //        api.setLast_id(0);
@@ -448,15 +434,15 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      * 按照类型 数量 加载多个fragment
      */
     private void loadFragment() {
-        fragments = new ArrayList<>();
-        for (TypeResp.DataDTO dataDTO : tabData) {
+//        fragments = new ArrayList<>();
+        /*for (TypeResp.DataDTO dataDTO : tabData) {
             String name = dataDTO.getName();
             TabLayout.Tab t = tab_layout.newTab().setText(name);
             tab_layout.addTab(t);
 //            fragments.add(new ExpFrag(dataDTO.getId()));
 
 
-        }
+        }*/
 
 //        vp2.setAdapter(new MyFragmentAdapter( this, fragments));
         /*ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter();
@@ -465,13 +451,27 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     }
 
+    /**
+     * 表情包 下的表情列表
+     */
     private RecyclerView recyclerView;
 
     private void initView1() {
         recyclerView = recyRoot.findViewById(R.id.list);
 //        recyclerView.addItemDecoration(new GridSpaceDecoration1());
         gridAdapter = new GridAdapter(this);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.top = 10;
+                outRect.bottom = 10;
+                outRect.left = 10;
+                outRect.right = 10;
+            }
+        });
         recyclerView.setAdapter(gridAdapter);
+        reqList();
     }
 
     /**
@@ -479,5 +479,45 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      */
     private void resulting1() {
 
+    }
+
+    //↓↓↓↓↓↓↓OnKeyboardActionListener接口对应的方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    @Override
+    public void onPress(int primaryCode) {
+
+    }
+
+    @Override
+    public void onRelease(int primaryCode) {
+
+    }
+
+    @Override
+    public void onText(CharSequence text) {
+
+    }
+
+    @Override
+    public void swipeLeft() {
+
+    }
+
+    @Override
+    public void swipeRight() {
+
+    }
+
+    @Override
+    public void swipeDown() {
+
+    }
+
+    @Override
+    public void swipeUp() {
+
+    }
+
+    private void toast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

@@ -45,8 +45,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ImageView iv = holder.itemView.findViewById(R.id.iv);
-//        iv.setImageDrawable(dataList.get(position));
-
         String relPath = dataList.get(position).getIcon();
         if (!relPath.startsWith("http")) {
             relPath = AppConfig.Companion.getHostUrl() + relPath;
