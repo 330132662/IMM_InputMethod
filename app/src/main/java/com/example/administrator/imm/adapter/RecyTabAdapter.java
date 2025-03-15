@@ -7,11 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.administrator.imm.R;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
+import com.example.administrator.imm.http.EventTypeChoose;
 import com.example.administrator.imm.model.ListResp;
 import com.example.administrator.imm.model.TypeResp;
 import com.google.android.material.textview.MaterialTextView;
@@ -21,6 +23,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Type;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * 通过列表  实现的 tab
@@ -52,7 +56,15 @@ public class RecyTabAdapter extends RecyclerView.Adapter<RecyTabAdapter.ViewHold
         TypeResp.DataDTO item = dataList.get(position);
         MaterialTextView textView = holder.itemView.findViewById(R.id.tv_item_tab);
         textView.setText(item.getName());
-        textView.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position)));
+        Timber.i("a1 " + item.getName());
+        textView.setOnClickListener(view -> EventBus.getDefault().post(new EventTypeChoose(position)));
+        if (item.isSelected()) {
+            textView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.indicator_type));
+        } else {
+            textView.setTextColor(ContextCompat.getColor(context, R.color.white));
+            holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.indicator_uncheck));
+        }
     }
 
     @Override

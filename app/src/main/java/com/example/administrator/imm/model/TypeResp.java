@@ -59,7 +59,7 @@ public class TypeResp {
         this.data = data;
     }
 
-    public static class DataDTO {
+    public static class DataDTO  extends SelectInfo{
         /**
          * id
          */

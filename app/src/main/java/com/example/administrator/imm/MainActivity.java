@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -19,7 +20,7 @@ import com.google.android.material.textview.MaterialTextView;
  */
 public class MainActivity extends AppActivity {
     private AppCompatButton btn_submit;
-    private MaterialTextView tv_inputmng;
+    private MaterialTextView tv_inputmng, tv_desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MainActivity extends AppActivity {
         setContentView(R.layout.activity_main);
         btn_submit = findViewById(R.id.btn_submit);
         tv_inputmng = findViewById(R.id.tv_inputmng);
+        tv_desc = findViewById(R.id.tv_desc);
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,6 +47,19 @@ public class MainActivity extends AppActivity {
                 }
             }
         });
+        tv_desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImm();
+            }
+        });
+        tv_desc.performClick();
+    }
+
+    private void chooseImm() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showInputMethodPicker();
+
     }
 
 

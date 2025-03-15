@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#1B1B1B"
+    android:paddingTop="20dp"
     android:minHeight="100dp"
     android:orientation="vertical">
     <!--    android:background="#1B1B1B"-->
@@ -19,14 +21,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recy_tab"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         android:contentDescription="方案1"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="4" />

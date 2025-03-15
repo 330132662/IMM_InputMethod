@@ -1,7 +1,6 @@
 package com.example.administrator.imm.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,6 +8,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.administrator.imm.R;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
@@ -43,7 +44,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int p = position;
         ImageView iv = holder.itemView.findViewById(R.id.iv);
 //        iv.setImageDrawable(dataList.get(position));
 
@@ -51,8 +51,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         if (!relPath.startsWith("http")) {
             relPath = AppConfig.Companion.getHostUrl() + relPath;
         }
-        GlideApp.with(context).load(relPath).into(iv);
-        iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(p)));
+
+        GlideApp.with(context).load(relPath).apply(new RequestOptions().transform(new RoundedCorners(10))).into(iv);
+        iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position)));
     }
 
     @Override

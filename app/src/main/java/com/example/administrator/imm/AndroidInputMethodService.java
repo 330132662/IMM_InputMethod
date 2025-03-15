@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipDescription;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
@@ -15,11 +16,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputContentInfo;
@@ -38,6 +37,7 @@ import com.example.administrator.imm.adapter.GridAdapter;
 import com.example.administrator.imm.adapter.RecyTabAdapter;
 import com.example.administrator.imm.common.AppConfig;
 import com.example.administrator.imm.http.EventClick;
+import com.example.administrator.imm.http.EventTypeChoose;
 import com.example.administrator.imm.http.ListApi;
 import com.example.administrator.imm.http.TypeApi;
 import com.example.administrator.imm.model.ListResp;
@@ -83,8 +83,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     }
 
     private void initView() {
-
         reqType();
+//        chooseImm();
     }
 
 
@@ -94,7 +94,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private RecyclerView recy_tab;
     private int typeIdChoosed = -1;
     private int fixedHeight = 240;// dp值
-    RecyTabAdapter adapter;
+    private RecyTabAdapter adapter;
 
     /**
      * 键盘 第一次现实的时候调用
@@ -108,8 +108,9 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         float heightF = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, fixedHeight, metrics);
 //        int heightPx = Integer.parseInt(heightF + "");
         int heightPx = (int) heightF;
+        Timber.i("heightPx = " + heightPx);
         // 设置窗口参数
-        Window window = getWindow().getWindow();
+        /*Window window = getWindow().getWindow();
         if (window != null) {
             WindowManager.LayoutParams params = window.getAttributes();
             params.width = FrameLayout.LayoutParams.MATCH_PARENT;
@@ -117,7 +118,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             params.verticalMargin = 0f;
             params.gravity = Gravity.BOTTOM;
             window.setAttributes(params);
-        }
+        }*/
 
 
         // keyboard被创建后，将调用onCreateInputView函数
@@ -128,7 +129,18 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         recyRoot = getLayoutInflater().inflate(R.layout.layout_recyclerview, null);
         tab_layout = recyRoot.findViewById(R.id.tab_layout);
         recy_tab = recyRoot.findViewById(R.id.recy_tab);
+        recy_tab.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.top = 1;
+                outRect.bottom = 1;
+                outRect.left = 20;
+                outRect.right = 2;
+            }
+        });
         adapter = new RecyTabAdapter(this);
+
         recy_tab.setAdapter(adapter);
 //        dsl_layout = recyRoot.findViewById(R.id.dsl_layout);
 //        vp2 = recyRoot.findViewById(R.id.vp2);
@@ -136,12 +148,14 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         initView1();
 
 
+
+        //            注意  虽然没用到  但是删了之后 其他空间就显示不出来的了！
         tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 //                  方案1  新请求  刷新recyclerview里的数据
-                typeIdChoosed = tabData.get(tab.getPosition()).getId();
-                reqList();
+//                typeIdChoosed = tabData.get(tab.getPosition()).getId();
+//                reqList();
             }
 
             @Override
@@ -178,6 +192,21 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             }
         }
     }*/
+    @Subscribe
+    public void expressionTypeClick(EventTypeChoose click) {
+//   表情包切换 背景对应切换
+        int size = tabData.size();
+        int choosedIndex = click.getPos();
+        for (int i = 0; i < size; i++) {
+            TypeResp.DataDTO item = tabData.get(i);
+            item.setSelected(choosedIndex == i);
+        }
+        adapter.setDataList(tabData);
+
+//        typeIdChoosed = tabData.get(choosedIndex).getId();
+//        reqList();
+    }
+
     @Subscribe
     public void expressionClick(EventClick click) {
         final int pos = click.getPos();
@@ -247,7 +276,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         super.onStartInputView(info, restarting);
         currentUsingPkg = info.packageName;
         Log.d(TAG, "onStartInputView 应用名称");
-        updateInputViewHeight();
+//        updateInputViewHeight();
     }
 
     private void updateInputViewHeight() {
@@ -262,6 +291,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) recyRoot.getLayoutParams();
         params.height = heightPx;
+        Timber.i("高度2 = " + heightPx);
         recyRoot.setLayoutParams(params);
     }
 
@@ -415,14 +445,14 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private List<Fragment> fragments;
 
     /**
-     * todo 按照类型 数量 加载多个fragment
+     * 按照类型 数量 加载多个fragment
      */
     private void loadFragment() {
         fragments = new ArrayList<>();
         for (TypeResp.DataDTO dataDTO : tabData) {
             String name = dataDTO.getName();
-            /*TabLayout.Tab t = tab_layout.newTab().setText(name);
-            tab_layout.addTab(t);*/
+            TabLayout.Tab t = tab_layout.newTab().setText(name);
+            tab_layout.addTab(t);
 //            fragments.add(new ExpFrag(dataDTO.getId()));
 
 
