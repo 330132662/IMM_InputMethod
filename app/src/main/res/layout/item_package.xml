@@ -12,8 +12,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="fitXY"
-        android:background="@color/colorAccent"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/qidai"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

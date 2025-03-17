@@ -59,7 +59,9 @@ public class ExpPackageAdapter extends RecyclerView.Adapter<ExpPackageAdapter.Vi
         if (!relPath.startsWith("http")) {
             relPath = AppConfig.Companion.getHostUrl() + relPath;
         }
-        GlideApp.with(context).asBitmap().load(relPath).apply(new RequestOptions().transform(new RoundedCorners(4))).into(holder.iv);
+        GlideApp.with(context).asBitmap().load(relPath).apply(new RequestOptions().transform(new RoundedCorners(4)))
+                .error(R.mipmap.qidai)
+                .into(holder.iv);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

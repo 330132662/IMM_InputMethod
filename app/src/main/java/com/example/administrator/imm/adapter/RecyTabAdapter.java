@@ -56,7 +56,6 @@ public class RecyTabAdapter extends RecyclerView.Adapter<RecyTabAdapter.ViewHold
         TypeResp.DataDTO item = dataList.get(position);
         MaterialTextView textView = holder.itemView.findViewById(R.id.tv_item_tab);
         textView.setText(item.getName());
-        Timber.i("a1 " + item.getName());
         textView.setOnClickListener(view -> EventBus.getDefault().post(new EventTypeChoose(position)));
         if (item.isSelected()) {
             textView.setTextColor(ContextCompat.getColor(context, R.color.red));

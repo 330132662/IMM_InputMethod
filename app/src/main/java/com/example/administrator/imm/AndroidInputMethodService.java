@@ -64,7 +64,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     //    private KeyboardView keyboardView; // 对应keyboard.xml中定义的KeyboardView
     private Keyboard keyboard; // 对应qwerty.xml中定义的Keyboard
-    private List<TypeResp.DataDTO> tabData;
+    private List<TypeResp.DataDTO> tabData = new ArrayList<>();
     private GridAdapter gridAdapter;
     private List<ListResp.DataDTO> expList;
 
@@ -348,20 +348,32 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      * 获取 表情包的 组
      */
     private void reqType() {
+        if(tabData !=null){
+            tabData.clear();
+        }
+
+        TypeResp.DataDTO em = new TypeResp.DataDTO();
+        em.setCount(136);
+        em.setSelected(true);
+        em.setName("Emoji");
+        em.setIcon("");
+
+        tabData.add(em);
         EasyHttp.get(ApplicationLifecycle.getInstance()).api(new TypeApi()).request(new OnHttpListener<TypeResp>() {
             @Override
             public void onSucceed(TypeResp result, boolean cache) {
                 OnHttpListener.super.onSucceed(result, cache);
-                Timber.d("onSucceed  cache ");
-                tabData = result.getData();
+                Timber.d("onSucceed  cache " + cache);
+//                tabData = result.getData();
+                tabData.addAll(result.getData());
 
             }
 
             @Override
-            public void onSucceed(TypeResp typeResp) {
-                tabData = typeResp.getData();
+            public void onSucceed(TypeResp result) {
+                /*tabData = result.getData();
                 Timber.d("onSucceed  ");
-
+                tabData.addAll(result.getData());*/
             }
 
             @Override
@@ -379,13 +391,15 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     }
 
     private void loadTab() {
+
         adapter.setDataList(tabData);
         recy_tab.setAdapter(adapter);
         if (tabData != null) {
-            typeIdChoosed = tabData.get(0).getId();
-            reqList();
+
+//       加载本地  emoji      typeIdChoosed = tabData.get(0).getId();
+//            reqList();
         } else {
-            toast("No Data");
+//            toast("No Data");
         }
 
     }

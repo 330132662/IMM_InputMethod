@@ -3,6 +3,7 @@ package com.example.administrator.imm.ui
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.angcyo.tablayout.DslTabLayout
@@ -96,17 +97,16 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
                 val toIndex = selectIndexList.first()
 //                toast("$toIndex")
                 if (toIndex == 0) {
-                    expPkgAdapter.setDataList(null);
+                    loadEmoji()
                 } else {
                     reqType();
-
                 }
             }
         }
     }
 
 
-    private var tabData: List<TypeResp.DataDTO>? = null
+    private var tabData: List<TypeResp.DataDTO>? = mutableListOf();
 
     /**
      * 获取 表情包的 组
@@ -161,5 +161,20 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
                 override fun onFail(e: Exception) {
                 }
             })
+    }
+
+    /**
+     *  模拟一条数据  展示一组emoji
+     */
+    private fun loadEmoji() {
+        tabData = mutableListOf()
+//        tabData.clear()
+        val em = TypeResp.DataDTO()
+        em.id = -1
+        em.count = 136;
+        em.icon = "";
+        em.name = "Emojis";
+        (tabData as MutableList<TypeResp.DataDTO>).add(em)
+        expPkgAdapter.setDataList(tabData);
     }
 }

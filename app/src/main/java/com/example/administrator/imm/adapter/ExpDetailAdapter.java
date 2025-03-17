@@ -62,6 +62,7 @@ public class ExpDetailAdapter extends RecyclerView.Adapter<ExpDetailAdapter.View
 
         GlideApp.with(context).asBitmap().load(relPath)
                 .apply(new RequestOptions().transform(new RoundedCorners(20)))
+                .error(R.mipmap.qidai)
                 .into(holder.iv);
 
         final Bitmap[] tem = {null};

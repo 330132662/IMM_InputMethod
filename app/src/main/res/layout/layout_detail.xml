@@ -22,11 +22,14 @@
         app:titleColor="@color/white" />
 
     <androidx.appcompat.widget.AppCompatImageView
+
         android:id="@+id/iv_ic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="start"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
         android:src="@mipmap/p1"
         app:layout_constraintStart_toStartOf="@+id/title_bar"
         app:layout_constraintTop_toBottomOf="@+id/title_bar" />
@@ -35,6 +38,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -56,6 +60,7 @@
         android:id="@+id/rv_explist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_explist"
         android:padding="10dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
