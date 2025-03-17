@@ -115,5 +115,14 @@
         <intent>
             <action android:name="android.intent.action.GET_CONTENT" />
         </intent>
+
+        <!-- 允许查询Google Play商店 -->
+        <package android:name="com.android.vending" />
+
+        <!-- 如果需要查询其他应用是否存在 -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
+        </intent>
     </queries>
 </manifest>

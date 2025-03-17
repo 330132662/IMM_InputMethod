@@ -16,7 +16,7 @@ import com.hjq.http.listener.OnHttpListener
 import okhttp3.Call
 
 /**
- *  引导页1
+ *  引导页1  富文本
  */
 class G1Act : AppActivity() {
     private val btn_next: AppCompatButton by lazy { findViewById(R.id.btn_next) }

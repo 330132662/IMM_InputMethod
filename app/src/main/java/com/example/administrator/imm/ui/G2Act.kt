@@ -6,7 +6,7 @@ import com.example.administrator.imm.R
 import com.example.administrator.imm.common.AppActivity
 
 /**
- *  引导页2
+ *  引导页2  视频页
  */
 class G2Act : AppActivity() {
     private  val btn_next: AppCompatButton by lazy { findViewById(R.id.btn_next) }

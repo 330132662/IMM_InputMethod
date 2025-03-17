@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.administrator.imm.common.AppActivity;
+import com.example.administrator.imm.model.EmojiUtil;
 import com.example.administrator.imm.ui.G1Act;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -32,7 +33,9 @@ public class MainActivity extends AppActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(G1Act.class);
+//                startActivity(G1Act.class);
+
+                EmojiUtil.Companion.test();
             }
         });
         tv_inputmng.setOnClickListener(new View.OnClickListener() {
