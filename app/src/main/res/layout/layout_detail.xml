@@ -21,7 +21,7 @@
         app:title="@string/app_name"
         app:titleColor="@color/white" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,11 +53,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_explist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_explist"
         android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_ic" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_ic"
+        app:spanCount="4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

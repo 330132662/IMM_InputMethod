@@ -175,7 +175,7 @@ class RequestHandler constructor(private val application: Application) : IReques
         }/*EasyLog.printLog(httpRequest, "----- writeCache cacheKey -----")
         EasyLog.printJson(httpRequest, cacheKey)*/
         EasyLog.printLog(httpRequest, "----- writeCache cacheValue -----")
-        EasyLog.printJson(httpRequest, cacheValue)
+//        EasyLog.printJson(httpRequest, cacheValue)
         return HttpCacheManager.getMmkv()?.putString(cacheKey, cacheValue)?.commit() == true
     }
 

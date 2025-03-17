@@ -14,6 +14,10 @@ class ListApi : BaseApi(), IRequestCache {
         return CacheMode.USE_CACHE_FIRST
     }
 
+    fun setTypeId(type_id: Int) {
+        this.type_id = type_id
+    }
+
     override fun getCacheTime(): Long {
         return 10 * 1000L
     }

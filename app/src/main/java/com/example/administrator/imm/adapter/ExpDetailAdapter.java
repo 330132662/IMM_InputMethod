@@ -26,8 +26,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-    public GridAdapter(Context context) {
+public class ExpDetailAdapter extends RecyclerView.Adapter<ExpDetailAdapter.ViewHolder> {
+    public ExpDetailAdapter(Context context) {
         this.context = context;
     }
 
@@ -59,14 +59,23 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         if (!relPath.startsWith("http")) {
             relPath = AppConfig.Companion.getHostUrl() + relPath;
         }
-        final Bitmap[] tem = {null};
 
         GlideApp.with(context).asBitmap().load(relPath)
                 .apply(new RequestOptions().transform(new RoundedCorners(20)))
+                .into(holder.iv);
+
+        final Bitmap[] tem = {null};
+
+        /*GlideApp.with(context).asBitmap().load(relPath)
+//                .apply(new RequestOptions().transform(new RoundedCorners(20)))
                 .into(new CustomTarget<Bitmap>() {
                           public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
                               tem[0] = bitmap;
                               holder.iv.setImageBitmap(bitmap);
+
+                              *//*GlideApp.with(context).asBitmap()
+                                      .load(bitmap)
+                                      .apply(new RequestOptions().transform(new RoundedCorners(20))).into(holder.iv);*//*
                           }
 
                           @Override
@@ -76,8 +85,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                       }
 
 
-                );
-        holder.iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position, tem[0])));
+                );*/
+//        holder.iv.setOnClickListener(view -> EventBus.getDefault().post(new EventClick(position, tem[0])));
     }
 
     @Override

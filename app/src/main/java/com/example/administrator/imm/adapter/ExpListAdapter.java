@@ -1,8 +1,6 @@
 package com.example.administrator.imm.adapter;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,27 +10,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.administrator.imm.R;
 
 import java.util.List;
-
-
-public class CopyAdapter extends RecyclerView.Adapter<CopyAdapter.ViewHolder> {
-    public void setDataList(List<String> dataList) {
-        this.dataList = dataList;
-        notifyDataSetChanged();
+/**
+ *  表情  列表
+ */
+public class ExpListAdapter extends RecyclerView.Adapter<ExpListAdapter.ViewHolder> {
+    public void setDataList(List<Drawable> dataList) {
+//        this.dataList = dataList;
     }
 
-    public CopyAdapter(Context context) {
-        this.context = context;
-    }
-
-    private Context context;
     private List<String> dataList;
 
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_package, parent, false);
+        View v = View.inflate(parent.getContext(), R.layout.frag_exp, null);
         return new ViewHolder(v);
     }
 

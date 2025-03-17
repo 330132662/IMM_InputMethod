@@ -12,4 +12,8 @@ class EventClick {
         this.pos = pos
         this.img = img
     }
+
+    constructor(pos: Int) {
+        this.pos = pos
+    }
 }

@@ -70,6 +70,27 @@ public class TypeResp {
          */
         @SerializedName("name")
         private String name;
+        @SerializedName("icon")
+        private String icon;
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        @SerializedName("count")
+        private int count;
 
         public Integer getId() {
             return id;
