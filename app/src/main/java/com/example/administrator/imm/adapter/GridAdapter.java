@@ -63,7 +63,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         GlideApp.with(context).asBitmap().load(relPath)
                 .apply(new RequestOptions().transform(new RoundedCorners(20)))
-                .placeholder(android.R.drawable.spinner_background)
+                .placeholder(R.mipmap.loading)
+                .error(R.mipmap.loading)
                 .into(new CustomTarget<Bitmap>() {
                           public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
                               tem[0] = bitmap;

@@ -1,6 +1,5 @@
 ## 自定义输入法
-![](/gif/简单输入法.png)
-![](/gif/新布局.png)
+
 
 参考文章： http://www.cnblogs.com/palance/p/5120048.html
 向三方app聊天界面传送表情包方案  https://yuanbao.tencent.com/bot/app/share/chat/e7848258b349fab7c865fd8682fa935b
@@ -115,8 +114,15 @@ Telegram 的输入控件需重写 `onCommitContent()` 方法以接收数据。
 ```
 输入法选择表情 → 生成 Content URI → commitContent() → Telegram 接收 URI → 读取内容 → 上传服务器 → 发送消息
 ```
-
 开发者需确保输入法和应用端均正确处理 MIME 类型、权限和文件流，以实现无缝发送表情包的功能。
 
+#### 预览
 
-```
+
+![](/gif/emoji-demo.png)
+![](/gif/pic-demo.png)
+![](/gif/简单输入法.png)
+![](/gif/新布局.png)
+ 
+
+
