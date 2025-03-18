@@ -33,9 +33,8 @@ public class MainActivity extends AppActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity(G1Act.class);
-
-                EmojiUtil.Companion.test(MainActivity.this);
+                startActivity(G1Act.class);
+//                EmojiUtil.Companion.test(MainActivity.this);
             }
         });
         tv_inputmng.setOnClickListener(new View.OnClickListener() {
