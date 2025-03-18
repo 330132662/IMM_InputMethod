@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,6 +72,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     private GridAdapter gridAdapter;
     private List<ListResp.DataDTO> expList;
 
+    private AppCompatImageButton btn_delete;
+
     // 做了一些非UI方面的初始化，即字符串变量词汇分隔符的初始化
     @Override
     public void onCreate() {
@@ -92,7 +95,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      */
     private RecyclerView recy_tab;
     private int typeIdChoosed = -1;
-    private int fixedHeight = 240;// dp值
+    private int fixedHeight = 160;// dp值
     private RecyTabAdapter adapter;
 
     /**
@@ -347,7 +350,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
         switch (primaryCode) {
             case Keyboard.KEYCODE_DELETE: //删除键
-                inputConnection.deleteSurroundingText(1, 0);
+                deleteText();
                 break;
             case Keyboard.KEYCODE_DONE: //完成键
                 inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
@@ -362,6 +365,16 @@ public class AndroidInputMethodService extends InputMethodService implements Key
                 char code = (char) primaryCode;
                 inputConnection.commitText(String.valueOf(code), 1); //可以对输入的字符串做 加密等等处理
         }
+    }
+
+    private void deleteText() {
+//        emoji是俩字符
+        boolean resDelete = getCurrentInputConnection().deleteSurroundingText(2, 0);
+        /*if (resDelete) {
+            toast("OK");
+        } else {
+            toast("删除失败");
+        }*/
     }
 
 
@@ -499,6 +512,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
 
     private void initView1() {
         recyclerView = recyRoot.findViewById(R.id.list);
+        btn_delete = recyRoot.findViewById(R.id.btn_delete);
 //        recyclerView.addItemDecoration(new GridSpaceDecoration1());
         gridAdapter = new GridAdapter(this);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -506,13 +520,16 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 outRect.top = 10;
-                outRect.bottom = 10;
+                outRect.bottom = 20;
                 outRect.left = 10;
                 outRect.right = 10;
             }
         });
         recyclerView.setAdapter(gridAdapter);
         this.loadEmoji();
+        btn_delete.setOnClickListener(view -> deleteText());
+
+
         initData();
     }
 

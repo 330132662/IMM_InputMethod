@@ -26,6 +26,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+/**
+ *  图片表情 适配器
+ */
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     public GridAdapter(Context context) {
         this.context = context;

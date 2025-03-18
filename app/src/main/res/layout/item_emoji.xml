@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:textSize="48sp"
+    android:textSize="18sp"
     android:text="12312312">
     <!--
         <androidx.appcompat.widget.AppCompatImageView
