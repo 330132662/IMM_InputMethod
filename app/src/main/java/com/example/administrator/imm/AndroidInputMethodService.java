@@ -26,8 +26,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.administrator.imm.adapter.EmojiAdapter;
 import com.example.administrator.imm.adapter.GridAdapter;
 import com.example.administrator.imm.adapter.RecyTabAdapter;
 import com.example.administrator.imm.common.AppConfig;
@@ -35,6 +37,7 @@ import com.example.administrator.imm.http.EventClick;
 import com.example.administrator.imm.http.EventTypeChoose;
 import com.example.administrator.imm.http.ListApi;
 import com.example.administrator.imm.http.TypeApi;
+import com.example.administrator.imm.model.EmojiUtil;
 import com.example.administrator.imm.model.ListResp;
 import com.example.administrator.imm.model.TypeResp;
 import com.hjq.http.EasyHttp;
@@ -76,7 +79,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         Log.d(TAG, "onCreate()");
     }
 
-    private void initView() {
+    private void initData() {
         reqType();
     }
 
@@ -140,7 +143,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         recy_tab.setAdapter(adapter);
 //        dsl_layout = recyRoot.findViewById(R.id.dsl_layout);
 //        vp2 = recyRoot.findViewById(R.id.vp2);
-        initView();
         initView1();
 
 
@@ -198,7 +200,23 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         adapter.setDataList(tabData);
 
         typeIdChoosed = tabData.get(choosedIndex).getId();
-        reqList();
+        if (typeIdChoosed > 0) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            this.reqList();
+        } else {
+//            加载 离线 emoji 数据
+            this.loadEmoji();
+        }
+    }
+
+    private EmojiAdapter emojiAdapter = new EmojiAdapter(this);
+    private List<String> eList;
+
+    private void loadEmoji() {
+        eList = EmojiUtil.Companion.test(this);
+        emojiAdapter.setDataList(eList);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 8));
+        recyclerView.setAdapter(emojiAdapter);
     }
 
     private Bitmap chooseBitmap = null;
@@ -212,24 +230,30 @@ public class AndroidInputMethodService extends InputMethodService implements Key
     }
 
     private void send(int pos) {
+        InputConnection ic = getCurrentInputConnection();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             /*Drawable drawable = ContextCompat.getDrawable(this, R.mipmap.ic_launcher);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();*/
-            File cacheDir = getCacheDir();
-            File file = new File(cacheDir, "temp_image.jpg");
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                chooseBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Uri uri = FileProvider.getUriForFile(this, AppConfig.Companion.getPackageName() + ".provider", file);
+            if (chooseBitmap == null) {
+                toast("emoji ");
+                String em = eList.get(pos);
+                ic.commitText(em, 1);
+
+            } else {
+                File cacheDir = getCacheDir();
+                File file = new File(cacheDir, "temp_image.jpg");
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    chooseBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Uri uri = FileProvider.getUriForFile(this, AppConfig.Companion.getPackageName() + ".provider", file);
 // 结果示例：content://com.example.app.fileprovider/cache/temp_image.png
-            InputConnection ic = getCurrentInputConnection();
-            Bundle params = new Bundle();
-            String mimeType = "image/png";
-            ic.commitContent(new InputContentInfo(uri,        // 表情包的 Content URI
-                    new ClipDescription(mimeType, new String[]{})            // 可选，用于标识来源
-            ), InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION, params);
+                Bundle params = new Bundle();
+                String mimeType = "image/png";
+                ic.commitContent(new InputContentInfo(uri,        // 表情包的 Content URI
+                        new ClipDescription(mimeType, new String[]{})            // 可选，用于标识来源
+                ), InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION, params);
           /*  String imageUrl = expList.get(pos).getIcon();
             if (!imageUrl.startsWith("http")) {
                 imageUrl = AppConfig.Companion.getHostUrl() + imageUrl;
@@ -238,28 +262,25 @@ public class AndroidInputMethodService extends InputMethodService implements Key
                 // 方式1：发送图片URL（通用方案）
                 ic.commitText(imageUrl, 1);
             }*/
-
-
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("image/png");  // 根据实际图片类型调整 MIME
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/png");  // 根据实际图片类型调整 MIME
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
 // 指定目标应用包名（例如微信）
-            intent.setPackage(currentUsingPkg);
-
+                intent.setPackage(currentUsingPkg);
 // 授予临时读取权限
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 // 启动分享
-            try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                // 处理目标应用未安装的情况
-                toast("no this app");
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // 处理目标应用未安装的情况
+                    toast("no this app");
+                }
             }
-        } else {
 
+        } else {
+            toast("no support");
         }
     }
 
@@ -348,7 +369,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
      * 获取 表情包的 组
      */
     private void reqType() {
-        if(tabData !=null){
+        if (tabData != null) {
             tabData.clear();
         }
 
@@ -357,6 +378,7 @@ public class AndroidInputMethodService extends InputMethodService implements Key
         em.setSelected(true);
         em.setName("Emoji");
         em.setIcon("");
+        em.setId(-1);
 
         tabData.add(em);
         EasyHttp.get(ApplicationLifecycle.getInstance()).api(new TypeApi()).request(new OnHttpListener<TypeResp>() {
@@ -490,7 +512,8 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             }
         });
         recyclerView.setAdapter(gridAdapter);
-        reqList();
+        this.loadEmoji();
+        initData();
     }
 
     /**

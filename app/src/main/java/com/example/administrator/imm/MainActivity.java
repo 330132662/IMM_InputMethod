@@ -35,7 +35,7 @@ public class MainActivity extends AppActivity {
             public void onClick(View view) {
 //                startActivity(G1Act.class);
 
-                EmojiUtil.Companion.test();
+                EmojiUtil.Companion.test(MainActivity.this);
             }
         });
         tv_inputmng.setOnClickListener(new View.OnClickListener() {

@@ -33,9 +33,6 @@ class EmojiUtil {
             }
         }
 
-        /*data class EmojiCategory(
-            val name: String, val emojis: List<String>
-        )*/
 
         fun loadCategorizedEmojis(): List<EmojiCategory> {
             return listOf(
@@ -53,11 +50,9 @@ class EmojiUtil {
                 EmojiCategory(name = "动物Animals & Nature",
                     emojis = listOf(0x1F400..0x1F43F, 0x1F980..0x1F9AE).flatMap { range ->
                         range.map { String(Character.toChars(it)) }
-                    }),*/
-                /*EmojiCategory(name = "Food & Drink", emojis = (0x1F32D..0x1F37F).map {
+                    }),*//*EmojiCategory(name = "Food & Drink", emojis = (0x1F32D..0x1F37F).map {
                     String(Character.toChars(it))
-                }),*/
-                /*EmojiCategory(name = "Travel & Places",
+                }),*//*EmojiCategory(name = "Travel & Places",
                     emojis = listOf(0x1F680..0x1F6FF, 0x2600..0x26FF).flatMap { range ->
                         range.map { String(Character.toChars(it)) }
                     }),*/
@@ -65,27 +60,25 @@ class EmojiUtil {
                 /*EmojiCategory(name = "Activities",
                     emojis = listOf(0x1F383..0x1F3C6, 0x1F3CA..0x1F3E0).flatMap { range ->
                         range.map { String(Character.toChars(it)) }
-                    }),*/
-                /*EmojiCategory(name = "Objects",
+                    }),*//*EmojiCategory(name = "Objects",
                     emojis = listOf(0x1F4A1..0x1F4F7, 0x1F52B..0x1F6D6).flatMap { range ->
                         range.map { String(Character.toChars(it)) }
                     }),
                 EmojiCategory(name = "Symbols",
                     emojis = listOf(0x1F300..0x1F5FF, 0x1F6A9..0x1F6B9).flatMap { range ->
                         range.map { String(Character.toChars(it)) }
-                    }),*/
-                /*EmojiCategory(name = "Flags",
+                    }),*//*EmojiCategory(name = "Flags",
                     emojis = (0x1F1E6..0x1F1FFF).map {
                         String(Character.toChars(it))
-                    }),*/
-                /*EmojiCategory(name = "Skin Tones & Modifiers",
+                    }),*//*EmojiCategory(name = "Skin Tones & Modifiers",
                     emojis = (0x1F3FB..0x1F3FF).map {
                         String(Character.toChars(it))
                     }),*/
             )
         }
 
-        fun test(ctx: Context) {
+        fun test(ctx: Context): List<String> {
+
             /*val categories = loadCategorizedEmojis()
             categories.forEach {
 //                println("${it.name}: ${it.emojis.take(50)}")
@@ -93,7 +86,20 @@ class EmojiUtil {
             }*/
             // 使用示例
             val emojiMap = generateEmojisByCategory(ctx)
-            emojiMap["Flags"]?.take(5)?.forEach { println(it) } // 输出前5个国旗
+//            emojiMap["Flags"]?.take(5)?.forEach { println(it) } // 输出前5个国旗
+            val stb4Show = StringBuilder();
+            val strList = mutableListOf<String>();
+
+            emojiMap.forEach { (groupName, emojis) ->
+//                stb.append(groupName);
+                emojis.forEach({
+                    stb4Show.append(it);
+                    strList.add(it);
+                });
+                println(stb4Show.toString());
+            };
+
+            return strList;
         }
 
         // 定义 Emoji 分类数据类
@@ -103,6 +109,9 @@ class EmojiUtil {
             val excludeCodePoints: List<Int> = emptyList() // 排除特定码点
         )
 
+        /*data class EmojiCategory(
+             val name: String, val emojis: List<String>
+         )*/
         // 初始化所有分类
         fun getAllEmojiGroups(): List<EmojiCategory> {
             return listOf(
@@ -110,16 +119,13 @@ class EmojiUtil {
                     "Smileys & Emotion",
                     codeRanges = listOf(0x1F600..0x1F64F),
                     excludeCodePoints = listOf(0x1F6D0) // 排除宗教符号等
-                ),
-                EmojiCategory(
-                    "Animals & Nature",
-                    codeRanges = listOf(0x1F400..0x1F43F, 0x1F980..0x1F9AE)
-                ),
-                EmojiCategory(
+                ), EmojiCategory(
+                    "Animals & Nature", codeRanges = listOf(0x1F400..0x1F43F, 0x1F980..0x1F9AE)
+                ), /*EmojiCategory(
                     "Flags",
                     codeRanges = listOf(0x1F1E6..0x1F1FF),
                     excludeCodePoints = listOf(0x1F1F4, 0x1F1E7) // 排除无效组合
-                )
+                )*/
                 // 添加其他分类...
             )
         }
