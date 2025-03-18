@@ -238,7 +238,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
             /*Drawable drawable = ContextCompat.getDrawable(this, R.mipmap.ic_launcher);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();*/
             if (chooseBitmap == null) {
-                toast("emoji ");
                 String em = eList.get(pos);
                 ic.commitText(em, 1);
 
@@ -357,7 +356,6 @@ public class AndroidInputMethodService extends InputMethodService implements Key
                 //hideWindow(); //隐藏键盘
                 break;
             case -6:
-                toast("1123");
                 /*Keyboard keyboardE = new Keyboard(this, R.xml.emoji); // 此处使用了qwerty.xml
                 keyboardView.setKeyboard(keyboardE);*/
                 break;

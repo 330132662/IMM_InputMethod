@@ -10,11 +10,13 @@ import com.angcyo.tablayout.DslTabLayout
 import com.example.administrator.imm.R
 import com.example.administrator.imm.adapter.ExpPackageAdapter
 import com.example.administrator.imm.common.AppActivity
+import com.example.administrator.imm.common.MmkvUtil
 import com.example.administrator.imm.http.EventClick
 import com.example.administrator.imm.http.TypeApi
 import com.example.administrator.imm.http.VersionApi
 import com.example.administrator.imm.model.CommonResp
 import com.example.administrator.imm.model.TypeResp
+import com.example.administrator.imm.model.VersionResp
 import com.google.android.material.textview.MaterialTextView
 import com.hjq.http.EasyHttp
 import com.hjq.http.lifecycle.ApplicationLifecycle
@@ -60,7 +62,7 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
 
     //    val decoration = ItemDecoration() ;
     private fun initView() {
-        val mDecorView = window.decorView
+//        val mDecorView = window.decorView
 
         /*tl_2 = mDecorView.findViewById(R.id.tl_2);
         tl_2?.setTabData(titles)*/
@@ -80,7 +82,7 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
             startActivity(VersionAct::class.java)
         }
         t_title.setOnClickListener {
-            startActivity(ExpDetailAct::class.java)
+//            startActivity(ExpDetailAct::class.java)
         }/* val def :DslSelectorConfig =  {
 
          }*/
@@ -142,14 +144,15 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
     private fun reqV() {
         val api = VersionApi()
         EasyHttp.get(ApplicationLifecycle.getInstance()).api(api)
-            .request(object : OnHttpListener<CommonResp> {
-                override fun onSucceed(result: CommonResp, cache: Boolean) {
+            .request(object : OnHttpListener<VersionResp> {
+                override fun onSucceed(result: VersionResp, cache: Boolean) {
                     super.onSucceed(result, cache)
-
-
+                    val v: String = result.data.newversion;
+                    MmkvUtil.save(MmkvUtil.VERSION_NAME, v);
+                    t_version.text = "Version：$v"
                 }
 
-                override fun onSucceed(result: CommonResp) {
+                override fun onSucceed(result: VersionResp) {
 
                 }
 

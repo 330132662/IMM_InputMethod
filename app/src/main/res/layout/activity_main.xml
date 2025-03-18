@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
-        app:leftIconHeight="0dp"
-        app:leftIconWidth="0dp"
+        app:leftBackground="@null"
+        app:leftIcon="@null"
         app:lineVisible="false"
         app:title="@string/app_name"
         app:titleColor="@color/white" />
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:src="@mipmap/p1" />
+        android:src="@mipmap/ic_launcher" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_inputmng"

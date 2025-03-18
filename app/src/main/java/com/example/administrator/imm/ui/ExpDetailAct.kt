@@ -6,14 +6,18 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.imm.R
+import com.example.administrator.imm.adapter.EmojiAdapter
 import com.example.administrator.imm.adapter.ExpDetailAdapter
 import com.example.administrator.imm.common.AppActivity
 import com.example.administrator.imm.common.AppConfig.Companion.getHostUrl
 import com.example.administrator.imm.http.ListApi
+import com.example.administrator.imm.model.EmojiUtil.Companion.test
 import com.example.administrator.imm.model.ListResp
 import com.google.android.material.textview.MaterialTextView
 import com.hjq.demo.http.glide.GlideApp
@@ -53,7 +57,11 @@ class ExpDetailAct : AppActivity() {
             }
         })
         rv_explist.adapter = gridAdapter;
-        reqList();
+        if (pkdId > 0) {
+            reqList();
+        } else {
+            this.loadEmoji();
+        }
     }
 
     companion object {
@@ -99,8 +107,9 @@ class ExpDetailAct : AppActivity() {
         tv_title.text = first?.name;
         tv_desc.text = "${expList?.size} Emojis";
 
+        rv_explist.setLayoutManager(GridLayoutManager(this, 4))
         gridAdapter?.setDataList(expList);
-
+        rv_explist.setAdapter(gridAdapter)
         var relPath: String = first.icon
         if (!relPath.startsWith("http")) {
             relPath = getHostUrl() + relPath
@@ -108,5 +117,22 @@ class ExpDetailAct : AppActivity() {
         GlideApp.with(this).asBitmap().load(relPath)
             .apply(RequestOptions().transform(RoundedCorners(20))).into(iv_ic)
 
+    }
+
+    private val emojiAdapter = EmojiAdapter(this)
+    private var eList: List<String>? = null
+
+    private fun loadEmoji() {
+
+        tv_title.text = "Emoji";
+
+
+        eList = test(this)
+//        tv_desc.text = "${eList?.size} Emojis";
+        tv_desc.text = "136 Emojis";
+        iv_ic.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.qidai));
+        emojiAdapter.setDataList(eList)
+        rv_explist.setLayoutManager(GridLayoutManager(this, 8))
+        rv_explist.setAdapter(emojiAdapter)
     }
 }

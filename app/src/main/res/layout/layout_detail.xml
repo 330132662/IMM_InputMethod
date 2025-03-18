@@ -30,7 +30,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"
-        android:src="@mipmap/p1"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="@+id/title_bar"
         app:layout_constraintTop_toBottomOf="@+id/title_bar" />
 

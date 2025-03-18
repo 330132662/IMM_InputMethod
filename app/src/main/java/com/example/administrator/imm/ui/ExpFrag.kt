@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.administrator.imm.R
 import com.example.administrator.imm.adapter.GridAdapter
 
+@Deprecated("没用到")
 class ExpFrag(typeId: Int) : Fragment(typeId) {
     private var typeId = 0;
 
@@ -18,6 +19,7 @@ class ExpFrag(typeId: Int) : Fragment(typeId) {
         super.onCreate(savedInstanceState)
         initData();
     }
+
     private var gridAdapter: GridAdapter? = null
     private var biaoqing: List<Drawable>? = null
     private fun initData() {
@@ -26,8 +28,7 @@ class ExpFrag(typeId: Int) : Fragment(typeId) {
 
         //        recyclerView.addItemDecoration(new GridSpaceDecoration1());
         gridAdapter = GridAdapter(context)
-        biaoqing = ArrayList<Drawable>()
-        /*for (i in 0..59) {
+        biaoqing = ArrayList<Drawable>()/*for (i in 0..59) {
             biaoqing.add(resources.getDrawable(R.mipmap.ic_launcher))
         }
         gridAdapter.setDataList(biaoqing)*/

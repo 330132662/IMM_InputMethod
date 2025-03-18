@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.administrator.imm.common.AppActivity;
-import com.example.administrator.imm.model.EmojiUtil;
+import com.example.administrator.imm.common.IMMHelper;
 import com.example.administrator.imm.ui.G1Act;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -33,20 +33,20 @@ public class MainActivity extends AppActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(G1Act.class);
+//                如果没勾选  去勾选
+                if (IMMHelper.Companion.isMyImeEnabled(MainActivity.this)) {
+                    startActivity(G1Act.class);
+                } else {
+                    MainActivity.this.openIMMSetting();
+
+                }
 //                EmojiUtil.Companion.test(MainActivity.this);
             }
         });
         tv_inputmng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 方式 1：直接打开输入法列表
-                Intent generalIntent = new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS);
-                try {
-                    startActivity(generalIntent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this, "无法打开输入法设置", Toast.LENGTH_SHORT).show();
-                }
+                MainActivity.this.openIMMSetting();
             }
         });
         tv_desc.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +61,16 @@ public class MainActivity extends AppActivity {
     private void chooseImm() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showInputMethodPicker();
-
     }
 
+    private void openIMMSetting() {
+        // 方式 1：直接打开输入法列表
+        Intent generalIntent = new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS);
+        try {
+            startActivity(generalIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(MainActivity.this, "无法打开输入法设置", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
