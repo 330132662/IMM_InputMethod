@@ -2,6 +2,7 @@ package com.example.administrator.imm.common
 
 import android.app.Application
 import android.os.Build
+import androidx.multidex.MultiDexApplication
 import com.example.administrator.imm.http.RequestHandler
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonToken
@@ -18,7 +19,7 @@ import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.util.Locale
 
-class AppApplication : Application() {
+class AppApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
