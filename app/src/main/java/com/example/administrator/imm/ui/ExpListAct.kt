@@ -29,7 +29,9 @@ import org.greenrobot.eventbus.Subscribe
  *  表情包列表  版本号
  *
  */
-class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
+class ExpListAct : AppActivity() {
+
+    /*private var tl_2: SegmentTabLayout? =
         null //: SegmentTabLayout by lazy { findViewById(R.id.tl_2) }*/
 
     private val t_version: MaterialTextView by lazy { findViewById(R.id.t_version) }
@@ -95,7 +97,7 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
                 }
             }
             //选中index的回调
-            onSelectIndexChange = { fromIndex, selectIndexList, reselect, fromUser ->
+            /*onSelectIndexChange = { fromIndex, selectIndexList, reselect, fromUser ->
                 val toIndex = selectIndexList.first()
 //                toast("$toIndex")
                 if (toIndex == 0) {
@@ -103,10 +105,14 @@ class ExpListAct : AppActivity() {/*private var tl_2: SegmentTabLayout? =
                 } else {
                     reqType();
                 }
-            }
+            }*/
         }
     }
 
+    override fun onResume() {
+        reqType();
+        super.onResume()
+    }
 
     private var tabData: List<TypeResp.DataDTO>? = mutableListOf();
 

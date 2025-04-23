@@ -53,7 +53,7 @@ public class ExpPackageAdapter extends RecyclerView.Adapter<ExpPackageAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int p = position;
         holder.tv_name.setText(dataList.get(position).getName());
-        holder.tv_num.setText(dataList.get(position).getCount() + " Emojis");
+        holder.tv_num.setText(dataList.get(position).getCount() + " stickers");
 
         String relPath = dataList.get(position).getIcon();
         if (!relPath.startsWith("http")) {
