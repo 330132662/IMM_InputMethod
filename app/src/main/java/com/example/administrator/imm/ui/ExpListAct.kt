@@ -182,7 +182,7 @@ class ExpListAct : AppActivity() {
         em.id = -1
         em.count = 136;
         em.icon = "";
-        em.name = "Emojis";
+        em.name = getString(R.string.face_stick);
         (tabData as MutableList<TypeResp.DataDTO>).add(em)
         expPkgAdapter.setDataList(tabData);
     }

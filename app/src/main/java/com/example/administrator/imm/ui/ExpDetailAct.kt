@@ -105,7 +105,7 @@ class ExpDetailAct : AppActivity() {
         }
         val first = expList?.get(0) ?: return;
         tv_title.text = first?.name;
-        tv_desc.text = "${expList?.size} Emojis";
+        tv_desc.text = "${expList?.size} " +  getString(R.string.face_stick);
 
         rv_explist.setLayoutManager(GridLayoutManager(this, 4))
         gridAdapter?.setDataList(expList);
@@ -124,12 +124,12 @@ class ExpDetailAct : AppActivity() {
 
     private fun loadEmoji() {
 
-        tv_title.text = "Emoji";
+        tv_title.text = getString(R.string.face_stick);
 
 
         eList = test(this)
 //        tv_desc.text = "${eList?.size} Emojis";
-        tv_desc.text = "136 Emojis";
+        tv_desc.text = "136 "+getString(R.string.face_stick);
         iv_ic.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.qidai));
         emojiAdapter.setDataList(eList)
         rv_explist.setLayoutManager(GridLayoutManager(this, 8))

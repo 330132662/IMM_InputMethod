@@ -84,7 +84,7 @@
 
         <TextView
             style="@style/TabCommonItemStyle"
-            android:text="EMOJIS" />
+            android:text="@string/app_name" />
 
         <TextView
             style="@style/TabCommonItemStyle"

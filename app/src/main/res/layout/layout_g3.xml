@@ -20,10 +20,10 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="0dp"
-        android:src="@mipmap/qidai"
+        android:src="@mipmap/guide1"
         app:layout_constraintTop_toBottomOf="@+id/titleBar" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="\nThank you for\nenablingEmoji Keyboardextension!\nEnjoy!!"
+        android:text="\nThank you for\nenabling Shqipmoji Keyboardextension!\nEnjoy!!"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/tv1" />
